@@ -3,6 +3,8 @@ import path from "path";
 
 export const firstToUpper = (text: string) : string => text[0].toUpperCase() + text.substring(1);
 
+const removeSpecialCharacters = (text: string) : string => text.split(/[\.\/\-_,\\]+/).map(element => firstToUpper(element)).join("")
+
 const formatType = (typeName: string) : string => {
     switch (typeName) {
         case "integer":
@@ -13,6 +15,10 @@ const formatType = (typeName: string) : string => {
             return "Double";
         case "float[]":
             return "Double[]";
+        case "boolean":
+            return "bool";
+        case "boolean[]":
+            return "bool[]";
         case "any":
             return "Object";
         case "any[]":
@@ -23,7 +29,7 @@ const formatType = (typeName: string) : string => {
 }
 
 export const generateCSharpInterface = (data: {[key: string]: IMetaTypeDataObject}) : string => {
-    const interfaceName = `I${firstToUpper(path.basename(process.cwd()))}`
+    const interfaceName = `I${removeSpecialCharacters(path.basename(process.cwd()))}`
     const fileName = `${interfaceName}.cs`
     const stream = createWriteStream(fileName);
     stream.once('open', (fd: any) => {
@@ -31,7 +37,7 @@ export const generateCSharpInterface = (data: {[key: string]: IMetaTypeDataObjec
             stream.write(`public interface ${interf === "files" ? interfaceName : interf}\n`);
             stream.write("{\n");
             Object.keys(data[interf]).forEach((key: string) => {
-                stream.write(`    ${formatType(data[interf][key].type)}${data[interf][key].required ? "" : "?"} ${firstToUpper(key)}`+" { get; set; }\n");
+                stream.write(`    ${formatType(data[interf][key].type)}${data[interf][key].required ? "" : "?"} ${removeSpecialCharacters(key)}`+" { get; set; }\n");
             })
             stream.write("}\n");
         })
