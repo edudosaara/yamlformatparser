@@ -6,13 +6,17 @@ export const firstToUpper = (text: string) : string => text[0].toUpperCase() + t
 const formatType = (typeName: string) : string => {
     switch (typeName) {
         case "integer":
-            return "int";
+            return "Int";
         case "integer[]":
-            return "int[]";
+            return "Int[]";
         case "float":
-            return "double";
+            return "Double";
         case "float[]":
-            return "double[]";
+            return "Double[]";
+        case "any":
+            return "Object";
+        case "any[]":
+            return "Object[]";
         default:
             return typeName;
     }
