@@ -1,7 +1,22 @@
 import { createWriteStream } from "fs";
 import path from "path";
 
-export const firstToUpper = (text: string) : string => text[0].toUpperCase() + text.substring(1)
+export const firstToUpper = (text: string) : string => text[0].toUpperCase() + text.substring(1);
+
+const formatType = (typeName: string) : string => {
+    switch (typeName) {
+        case "integer":
+            return "int";
+        case "integer[]":
+            return "int[]";
+        case "float":
+            return "double";
+        case "float[]":
+            return "double[]";
+        default:
+            return typeName;
+    }
+}
 
 export const generateCSharpInterface = (data: {[key: string]: IMetaTypeDataObject}) : string => {
     const interfaceName = `I${firstToUpper(path.basename(process.cwd()))}`
@@ -12,9 +27,9 @@ export const generateCSharpInterface = (data: {[key: string]: IMetaTypeDataObjec
             stream.write(`public interface ${interf === "files" ? interfaceName : interf}\n`);
             stream.write("{\n");
             Object.keys(data[interf]).forEach((key: string) => {
-                stream.write(`\t${data[interf][key].type}${data[interf][key].required ? "" : "?"} ${firstToUpper(key)}`+" { get; set; }\n");
+                stream.write(`    ${formatType(data[interf][key].type)}${data[interf][key].required ? "" : "?"} ${firstToUpper(key)}`+" { get; set; }\n");
             })
-            stream.write("}\n\n");
+            stream.write("}\n");
         })
         stream.end();
     });
