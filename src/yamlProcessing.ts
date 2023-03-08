@@ -5,6 +5,7 @@ import { firstToUpper } from "./interfaceGenerator";
 let typeData : keyValueOfArrays = {files: []}
 
 const getObjectFormat = (newObj: keyValueObject) : keyValueObject => {
+    if ([null, undefined].includes(newObj)) return null;
     let refinedObj: keyValueObject = {};
     Object.keys(newObj).forEach((key: string) => {
         refinedObj[key] = refinedType(newObj[key], key);
@@ -23,6 +24,7 @@ const refinedType = (element: any, key: string) : string => {
                 return `${firstElementType}[]`;
             }
             const formattedElement = getObjectFormat(element);
+            if (formattedElement === null) return "any";
             const interfaceName = `I${firstToUpper(key)}`
             typeData[interfaceName] = Object.keys(typeData).includes(interfaceName) ? [...typeData[interfaceName], formattedElement] : [formattedElement];
             return interfaceName;
