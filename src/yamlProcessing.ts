@@ -83,7 +83,7 @@ const fullMerge = (arrayOfObjs: keyValueObject[]) : any => {
                     joint[key].type = "string";
                 }
                 if (accumulator[key].type.match(/^I[A-Z].*$/) || newElement[key].type.match(/^I[A-Z].*$/)) {
-                    joint[key].type = accumulator[key].type + "|" + newElement[key].type;
+                    joint[key].type = [...new Set([...accumulator[key].type.split("|"), newElement[key].type])].join("|");
                 }
             }
         })
